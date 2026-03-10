@@ -1,4 +1,6 @@
 import transporter from "../services/nodemailer.js";
+import dotenv from "dotenv";
+dotenv.config();
 
 export const otpSend = async (otp, to) => {
   try {
