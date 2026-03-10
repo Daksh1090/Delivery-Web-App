@@ -1,7 +1,7 @@
 import pool from "../config/db.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { otpSend } from "../Nodemailer/SendMail.js";
+import { sendOtpEmail } from "../Nodemailer/SendMail.js";
 import { generateOTP } from "../utils/generateOTP.js";
 
 export const RegisterUser = async (req, res) => {
@@ -23,7 +23,7 @@ export const RegisterUser = async (req, res) => {
       [name, email, encryptedPassword, phone, otp, otp_expiry],
     );
 
-    await otpSend(otp, email);
+    await sendOtpEmail(otp, email);
 
     res.json(newUser.rows[0]);
   } catch (error) {

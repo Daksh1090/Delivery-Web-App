@@ -1,23 +1,12 @@
-import transporter from "../services/nodemailer.js";
-import dotenv from "dotenv";
-dotenv.config();
+import { Resend } from "resend";
 
-export const otpSend = async (otp, to) => {
-  try {
-    const info = await transporter.sendMail({
-      from: `Delivery App <${process.env.GOOGLE_APP_EMAIL}>`,
-      to,
-      subject: "Your OTP Code",
-      text: `Your OTP for Delivery App is: ${otp}. It will expire in 5 minutes.`,
-      // optional: you can use HTML
-      html: `<p>Your OTP for <strong>Delivery App</strong> is: <strong>${otp}</strong></p>
-             <p>It will expire in 5 minutes.</p>`
-    });
+const resend = new Resend(process.env.RESEND_API_KEY);
 
-    console.log("OTP sent:", info.messageId);
-    return info;
-  } catch (error) {
-    console.error("Error sending OTP:", error);
-    throw error; // so caller knows email failed
-  }
+export const sendOtpEmail = async (email, otp) => {
+  await resend.emails.send({
+    from: process.env.GOOGLE_APP_EMAIL,
+    to: email,
+    subject: "OTP Verification",
+    html: `<h2>Your OTP is ${otp}</h2>`
+  });
 };
