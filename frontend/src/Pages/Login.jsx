@@ -18,7 +18,7 @@ function Login() {
 
       await api.post("/api/login", { email, password });
 
-      navigate("/home")
+      navigate("/")
 
       toast.success("Login Successful");
     } catch (error) {

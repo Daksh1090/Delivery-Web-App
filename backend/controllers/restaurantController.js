@@ -111,3 +111,34 @@ export const loginResta = async (req, res) => {
     res.status(500).json({ message: "Server Error" });
   }
 };
+
+
+
+export const addFood = async (req, res) => {
+  try {
+    const { name, description, price, category_id, image } = req.body;
+
+    if (!name || !price || !category_id) {
+      return res.status(400).json({ message: "Required fields missing" });
+    }
+
+    const restaurant_id = req.userId;
+
+    const result = await pool.query(
+      `INSERT INTO foods
+      (name, description, price, restaurant_id, category_id, image)
+      VALUES ($1,$2,$3,$4,$5,$6)
+      RETURNING *`,
+      [name, description, price, restaurant_id, category_id, image]
+    );
+
+    res.status(201).json({
+      message: "Food added successfully",
+      food: result.rows[0],
+    });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server Error" });
+  }
+};

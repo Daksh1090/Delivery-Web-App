@@ -60,9 +60,14 @@ export const LoginUser = async (req, res) => {
 
     // Generate webtoken
 
-    const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, {
-      expiresIn: "7d",
-    });
+    const token = jwt.sign(
+  {
+    userId: user.id,
+    role: user.role
+  },
+  process.env.JWT_SECRET,
+  { expiresIn: "7d" }
+);
 
     res.cookie("token", token, {
       httpOnly: true,
