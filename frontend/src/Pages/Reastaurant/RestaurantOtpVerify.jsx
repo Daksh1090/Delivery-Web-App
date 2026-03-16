@@ -1,11 +1,11 @@
 import { useState } from "react";
-import Input from "../Components/Input";
+import Input from "../../Components/Input";
 import { useLocation, useNavigate , Link} from "react-router-dom";
-import api from "../Api/api";
+import api from "../../Api/api";
 import { toast } from "react-toastify";
 
-function OtpVerify() {
-  const location = useLocation();
+function RestaurantOtpVerify() {
+     const location = useLocation();
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
@@ -17,10 +17,10 @@ function OtpVerify() {
       e.preventDefault();
       setLoading(true);
 
-      await api.post("/api/otp-verify", { email, otp });
+      await api.post("/api/rest-otp-verify", { email, otp });
 
       toast.success("OTP Verified Successfully");
-      navigate("/login");
+      navigate("/restaurant/login");
     } catch (error) {
       toast.error(error?.response?.data?.message || "Verification Failed");
     } finally {
@@ -51,7 +51,7 @@ function OtpVerify() {
         </form>
         <div className="flex flex-col justify-center items-center pt-3">
           <p>Didn't receive OTP?</p>
-         <Link to="/resend-otp"> <button className="underline text-blue-600">
+         <Link to="/restaurant/resend-otp"> <button className="underline text-blue-600">
             Resend OTP
           </button></Link>
         </div>
@@ -60,4 +60,4 @@ function OtpVerify() {
   );
 }
 
-export default OtpVerify;
+export default RestaurantOtpVerify

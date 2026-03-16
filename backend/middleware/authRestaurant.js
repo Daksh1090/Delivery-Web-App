@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 
 export const authRestaurant = (req, res, next) => {
   try {
-    const token = cookies.token;
+    const token = req.cookies.token;
 
     if (!token) {
       return res.status(401).json({ message: "Unauthorized" });

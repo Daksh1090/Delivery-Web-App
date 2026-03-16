@@ -1,46 +1,52 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { toast } from "react-toastify";
-import api from "../Api/api";
-import Input from "../Components/Input";
+import api from "../../Api/api";
+import Input from "../../Components/Input";
 import { Link, useNavigate } from "react-router-dom";
 
-function ResendOtp() {
+function RestaurantLogin() {
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
   const handleSubmit = async (e) => {
     try {
       e.preventDefault();
       setLoading(true);
 
-      await api.post("/api/resend-otp", { email });
+      await api.post("/api/login-restaurant", { email, password });
 
-      navigate("/verify-otp", { state: { email } });
+      navigate("/restaurant");
 
-      toast.success("OTP resent successfully");
+      toast.success("Login Successful");
     } catch (error) {
-      toast.error(error?.response?.data?.message || "Failed to resend OTP");
+      toast.error(error?.response?.data?.message || "Login Error");
     } finally {
       setLoading(false);
     }
   };
-
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-100 to-purple-100">
       <div className="bg-white shadow-xl rounded-xl p-8 w-full max-w-md">
-        <h1 className="text-3xl font-bold text-center mb-6">Resend OTP</h1>
-
-        <p className="text-gray-500 text-center mb-4">
-          Enter your email to receive a new OTP
-        </p>
+        <h1 className="text-3xl font-bold text-center mb-6">Login</h1>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <Input
             type="email"
             name="email"
-            placeholder="Enter your email"
+            placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+
+          <Input
+            type="password"
+            name="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             required
           />
 
@@ -48,14 +54,13 @@ function ResendOtp() {
             type="submit"
             className="bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition"
           >
-            {loading ? "Sending..." : "Resend OTP"}
+            {loading ? "Logging..." : "Login"}
           </button>
         </form>
-
-        <div className="flex flex-col justify-center items-center pt-3">
-          <p>Remember your password?</p>
-          <Link to="/verify-otp">
-            <button className="underline text-blue-600">Verify Otp</button>
+        <div className="flex flex-col justify-center items-center pt-2">
+          <p>Don't Have a Account</p>
+          <Link to="/restaurant/resend-otp">
+            <button className="underline">Sign Up</button>
           </Link>
         </div>
       </div>
@@ -63,4 +68,4 @@ function ResendOtp() {
   );
 }
 
-export default ResendOtp;
+export default RestaurantLogin;

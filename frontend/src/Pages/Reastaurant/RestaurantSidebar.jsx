@@ -1,3 +1,4 @@
+import { Link, NavLink } from "react-router-dom";
 import {
   IoHomeOutline,
   IoFastFoodOutline,
@@ -6,10 +7,8 @@ import {
 } from "react-icons/io5";
 import { RxCross1 } from "react-icons/rx";
 import { IoMdRestaurant } from "react-icons/io";
-import { NavLink } from "react-router-dom";
-import { BiCategoryAlt } from "react-icons/bi";
 
-function AdminSidebar({ sidebarOpen, toggleSidebar }) {
+function RestaurantSidebar({ sidebarOpen, toggleSidebar }) {
   return (
     <aside
       className={`
@@ -26,7 +25,7 @@ function AdminSidebar({ sidebarOpen, toggleSidebar }) {
     >
       {/* Header */}
       <div className="flex w-full justify-between items-center mb-10">
-        <h1 className="text-xl font-bold">Admin Panel</h1>
+        <h1 className="text-xl font-bold">Restaurant</h1>
 
         <button onClick={toggleSidebar} className="text-2xl md:hidden">
           <RxCross1 />
@@ -36,7 +35,7 @@ function AdminSidebar({ sidebarOpen, toggleSidebar }) {
       {/* Menu */}
       <nav className="space-y-6">
         <NavLink
-          to="/admin"
+          to="/restaurant"
           onClick={toggleSidebar}
           className="flex items-center gap-3 hover:text-orange-400"
         >
@@ -45,52 +44,35 @@ function AdminSidebar({ sidebarOpen, toggleSidebar }) {
         </NavLink>
 
         <NavLink
-          to="/admin/foods"
+          to="/restaurant/add-food"
           onClick={toggleSidebar}
           className="flex items-center gap-3 hover:text-orange-400"
         >
           <IoFastFoodOutline />
-          <span>Foods</span>
+          <span>Add Food</span>
         </NavLink>
 
         <NavLink
-          to="/admin/category"
-          onClick={toggleSidebar}
-          className="flex items-center gap-3 hover:text-orange-400"
-        >
-          <BiCategoryAlt />
-          <span>Cetegory</span>
-        </NavLink>
-
-        <NavLink
-          to="/admin/orders"
+          to="/restaurant/foods"
           onClick={toggleSidebar}
           className="flex items-center gap-3 hover:text-orange-400"
         >
           <IoBagOutline />
-          <span>Orders</span>
+          <span>Foods</span>
         </NavLink>
 
         <NavLink
-          to="/admin/users"
+          to="/restaurant/orders"
           onClick={toggleSidebar}
           className="flex items-center gap-3 hover:text-orange-400"
         >
           <IoPeopleOutline />
-          <span>Users</span>
+          <span>Orders</span>
         </NavLink>
 
-        <NavLink
-          to="/admin/restaurants"
-          onClick={toggleSidebar}
-          className="flex items-center gap-3 hover:text-orange-400"
-        >
-          <IoMdRestaurant />
-          <span>Restaurants</span>
-        </NavLink>
       </nav>
     </aside>
   );
 }
 
-export default AdminSidebar;
+export default RestaurantSidebar;

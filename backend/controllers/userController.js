@@ -23,7 +23,7 @@ export const RegisterUser = async (req, res) => {
       [name, email, encryptedPassword, phone, otp, otp_expiry],
     );
 
-    await sendOtpEmail(otp, email);
+    await sendOtpEmail(email, otp);
 
     res.json(newUser.rows[0]);
   } catch (error) {
@@ -50,7 +50,8 @@ export const LoginUser = async (req, res) => {
 
     const user = userExist.rows[0];
 
-    if(!user.is_verified) return res.status(400).json({ message : "User Not Verified"});
+    if (!user.is_verified)
+      return res.status(400).json({ message: "User Not Verified" });
 
     // match password
     const isMatch = await bcrypt.compare(password, user.password);
@@ -61,19 +62,19 @@ export const LoginUser = async (req, res) => {
     // Generate webtoken
 
     const token = jwt.sign(
-  {
-    userId: user.id,
-    role: user.role
-  },
-  process.env.JWT_SECRET,
-  { expiresIn: "7d" }
-);
+      {
+        userId: user.id,
+        role: user.role,
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: "7d" },
+    );
 
     res.cookie("token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "none",
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7day
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
     res.json({
@@ -94,8 +95,8 @@ export const LoginUser = async (req, res) => {
 export const otpVerification = async (req, res) => {
   try {
     const { email, otp } = req.body;
-  
-    if ((!email || !otp))
+
+    if (!email || !otp)
       return res.status(400).json({ message: "Otp Required" });
 
     const result = await pool.query("SELECT * FROM users WHERE email = $1", [
@@ -108,40 +109,37 @@ export const otpVerification = async (req, res) => {
       return res.status(400).json({ message: "Invalid Otp" });
 
     if (user.otp !== otp) {
-      return res.status(400).json({ message: "Wrong Otp" })
+      return res.status(400).json({ message: "Wrong Otp" });
     }
 
     if (Date.now() > user.otp_expiry) {
-      return res.status(400).json({ message: "Otp Expired" })
+      return res.status(400).json({ message: "Otp Expired" });
     }
 
-    await pool.query("UPDATE users SET is_verified = true WHERE email = $1",[email])
+    await pool.query("UPDATE users SET is_verified = true WHERE email = $1", [
+      email,
+    ]);
 
     res.json({ message: "Otp verified successfully" });
-
   } catch (error) {
     console.error("Otp Verify Error", error);
     res.status(500).json("Server Error");
   }
 };
 
-
 export const resendOtp = async (req, res) => {
   try {
     const { email } = req.body;
 
-    if (!email) 
-      return res.status(400).json({ message: "Email required" });
+    if (!email) return res.status(400).json({ message: "Email required" });
 
     // Check if user exists
-    const result = await pool.query(
-      "SELECT * FROM users WHERE email = $1",
-      [email]
-    );
+    const result = await pool.query("SELECT * FROM users WHERE email = $1", [
+      email,
+    ]);
 
     const user = result.rows[0];
-    if (!user) 
-      return res.status(404).json({ message: "User not found" });
+    if (!user) return res.status(404).json({ message: "User not found" });
 
     // Generate new OTP and expiry (10 min)
     const otp = generateOTP();
@@ -150,14 +148,13 @@ export const resendOtp = async (req, res) => {
     // Update user with new OTP and expiry
     await pool.query(
       "UPDATE users SET otp = $1, otp_expiry = $2 WHERE email = $3",
-      [otp, otp_expiry, email]
+      [otp, otp_expiry, email],
     );
 
     // Send OTP email
     await otpSend(otp, email);
 
     res.json({ message: "OTP resent successfully" });
-
   } catch (error) {
     console.error("Resend OTP Error:", error);
     res.status(500).json({ message: "Server Error" });

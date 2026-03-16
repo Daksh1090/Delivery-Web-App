@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
-import api from "../Api/api";
-import Input from "../Components/Input";
+import api from "../../Api/api";
+import Input from "../../Components/Input";
 import { Link, useNavigate } from "react-router-dom";
 
-function ResendOtp() {
+function RestaurantResendOtp() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -13,9 +13,9 @@ function ResendOtp() {
       e.preventDefault();
       setLoading(true);
 
-      await api.post("/api/resend-otp", { email });
+      await api.post("/api/rest-resend-otp", { email });
 
-      navigate("/verify-otp", { state: { email } });
+      navigate("/restaurant/login", { state: { email } });
 
       toast.success("OTP resent successfully");
     } catch (error) {
@@ -24,7 +24,6 @@ function ResendOtp() {
       setLoading(false);
     }
   };
-
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-100 to-purple-100">
       <div className="bg-white shadow-xl rounded-xl p-8 w-full max-w-md">
@@ -54,7 +53,7 @@ function ResendOtp() {
 
         <div className="flex flex-col justify-center items-center pt-3">
           <p>Remember your password?</p>
-          <Link to="/verify-otp">
+          <Link to="/restaurant/verify-otp">
             <button className="underline text-blue-600">Verify Otp</button>
           </Link>
         </div>
@@ -63,4 +62,4 @@ function ResendOtp() {
   );
 }
 
-export default ResendOtp;
+export default RestaurantResendOtp;

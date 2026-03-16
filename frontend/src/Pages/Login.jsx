@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import api from "../Api/api";
-import Input from "../Container/Input";
+import Input from "../Components/Input";
 import { Link , useNavigate} from "react-router-dom";
 
 
