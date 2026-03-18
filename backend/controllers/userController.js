@@ -160,3 +160,61 @@ export const resendOtp = async (req, res) => {
     res.status(500).json({ message: "Server Error" });
   }
 };
+
+
+export const toggleFavorite = async (req, res) => {
+  try {
+    const user_id = req.user.userId; // from auth middleware
+    const { food_id } = req.body;
+
+
+    console.log("HHHHHHHHHHHHHHHHHHHHHHHHHHH")
+    console.log(user_id)
+    console.log(food_id)
+    // check if already exists
+    const existing = await pool.query(
+      "SELECT * FROM favorites WHERE user_id = $1 AND food_id = $2",
+      [user_id, food_id]
+    );
+
+    if (existing.rows.length > 0) {
+      // 👉 remove favorite
+      await pool.query(
+        "DELETE FROM favorites WHERE user_id = $1 AND food_id = $2",
+        [user_id, food_id]
+      );
+
+      return res.json({ message: "Removed from favorites", favorited: false });
+    } else {
+      // 👉 add favorite
+      await pool.query(
+        "INSERT INTO favorites (user_id, food_id) VALUES ($1, $2)",
+        [user_id, food_id]
+      );
+
+      return res.json({ message: "Added to favorites", favorited: true });
+    }
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+
+
+export const getFavorites = async (req, res) => {
+  try {
+    const user_id = req.user.userId;
+
+    const result = await pool.query(
+      "SELECT food_id FROM favorites WHERE user_id = $1",
+      [user_id]
+    );
+
+    res.json(result.rows); // [{food_id:1}, {food_id:2}]
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Error" });
+  }
+};

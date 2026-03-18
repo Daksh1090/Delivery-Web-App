@@ -10,7 +10,7 @@ router.get("/get-users",authAdmin, getAllUsers);
 router.patch("/approve-restaurant/:id", authAdmin, approveRestaurant);
 router.patch("/reject-restaurant/:id", authAdmin, rejectRestaurant);
 router.post("/add-category", authAdmin,upload.single("icon"), addCategory);
-router.get("/get_category", authAdmin, getFoodCategory);
+router.get("/get_category", getFoodCategory);
 router.put("/update_Category/:id", authAdmin,upload.single("icon"), UpdateCategory);
 
 export default router;

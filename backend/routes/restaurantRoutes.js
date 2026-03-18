@@ -11,7 +11,7 @@ router.post('/rest-otp-verify', RestaurantOtpVerification);
 router.post('/rest-resend-otp', RestaurantResendOtp);
 router.post('/login-restaurant', loginResta);
 router.post("/add-food", authRestaurant, upload.single("image"), addFood);
-router.get("/get-food-category", authRestaurant, getFoodCategory);
+router.get("/get-food-category", getFoodCategory);
 router.get("/foods", authRestaurant, getFoods);
 router.patch("/toggle-food/:id", authRestaurant, toggleFoodAvailability);
 router.patch("/toggle-food/:id", authRestaurant, toggleFoodAvailability);

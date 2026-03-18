@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Categories from "../Components/Categories";
 import DealsHeader from "../Components/DealsHeader";
 import FoodCard from "../Components/FoodCard";
@@ -8,6 +9,10 @@ import ProfilePic from "../Components/ProfilePic";
 import SearchSection from "../Components/SearchSection";
 
 function Home() {
+
+  const [selectCategory,setSelectcategory] = useState("All");
+  console.log(selectCategory);
+
   return (
     <div className="bg-black min-h-screen pb-20">
       <header className="bg-[#fd6931] flex flex-col items-center">
@@ -20,9 +25,9 @@ function Home() {
       </header>
 
       <main>
-        <Categories/>
+        <Categories setSelectcategory={setSelectcategory}/>
         <DealsHeader/>
-        <FoodCard/>
+        <FoodCard selectCategory={selectCategory}/>
       </main>
 
       <footer className="flex justify-center w-full border-t fixed bottom-0 bg-black border-gray-700">

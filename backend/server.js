@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 import userRoutes from "./routes/userRoutes.js";
 import restaurantRoutes from "./routes/restaurantRoutes.js"
 import adminFood from "./routes/admin_Routes/adminRestourant.js";
+import publicApis from "./routes/publicRoutes.js"
 
 env.config();
 const app = express();
@@ -18,6 +19,7 @@ app.use(express.json());
 app.use("/api", userRoutes);
 app.use("/api", restaurantRoutes);
 app.use("/api", adminFood);
+app.use("/api", publicApis);
 
 const PORT = process.env.PORT || 5000;
 

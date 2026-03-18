@@ -119,7 +119,7 @@ export const UpdateCategory = async (req, res) => {
     let imageUrl = null;
 
     // upload new icon if provided
-    if (req.file) {
+    if (req.file) { 
       const result = await imagekit.upload({
         file: req.file.buffer.toString("base64"),
         fileName: req.file.originalname,
